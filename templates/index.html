@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+        <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <link rel="stylesheet" href="{{url_for('static', filename='styles.css')}}">
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    </head>
+    <body>
+        <div class="container form">
+            <div class="contact-image">
+                <a href="https://ibb.co.com/VTD0sFY"><img src="https://i.ibb.co.com/892nHyg/5dd25319e5ab4d5221bbc7da5e8a3bfa.jpg" alt="5dd25319e5ab4d5221bbc7da5e8a3bfa" border="0"></a>
+            </div>
+            <form id="reviewForm" action="{{url_for("predict")}}" method="post">
+                <h3>Tiktok Review Analysis by Version</h3>
+                        <div class="dropdown-container">
+                            <div class="dropdown-content">
+                                <select id="dropdown-select" name="reviewCreatedVersion" class="form-control" required>
+                                  <option value="">Choose version</option>
+                                  <!-- Opsi akan ditambahkan di sini oleh JavaScript -->
+                                </select>
+                            </div>
+                        </div>
+                        <div class="btn-container">
+                            <input type="submit" name="analyzeBtn" id="predict-button" class="btnContactSubmit" value="View Analysis" />
+                        </div>
+                        {% if selected_version %}
+                        <div id="result-container">
+                            <h2>Analysis Result for Version {{selected_version}}</h2>
+                        
+                            {% if error %}
+                                <div class="alert alert-danger" role="alert">
+                                    {{ error }}
+                                </div>
+                            {% endif %}
+                        
+                                <div id="chartContainer">
+                                    {% if plot_url %}
+                                    <img src="data:image/png;base64,{{plot_url}}" alt="Sentiment Distribution" class="img-fluid">
+                                    {% endif %}
+                                </div>
+
+                            {% if reviews %}
+                            <div id="commentsContainer">
+                                <h3>Review with Most Thumbs Up</h3>
+                                <table style="width: 100%;">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 70%;">Comments</th>
+                                            <th>Thumbs Up</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for review in reviews %}
+                                        <tr>
+                                            <td>{{review.comment}}</td>
+                                            <td>{{review.thumbsup}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endif %}
+                        
+                        </div>
+                        {% endif %}
+            </form>
+        </div>
+    </body>
+    <script src="{{url_for('static', filename='script.js')}}"></script>
+</html>
